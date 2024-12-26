@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    text-align: center;
+}
+
+button {
+    margin-top: 10px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+}

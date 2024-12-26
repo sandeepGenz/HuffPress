@@ -1,0 +1,49 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compress Your Text File</title>
+</head>
+<body>
+    <h1>Compress Your Text File</h1>
+    <form action="/compress" method="POST" enctype="multipart/form-data">
+        <label for="file">Upload Text File:</label>
+        <input type="file" name="file" id="file" accept=".txt" required><br><br>
+        <button type="submit">Compress</button>
+    </form>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+</head>
+<body>
+    <h1>Upload a File</h1>
+    
+    <!-- Form for compressing -->
+    <h2>Compress Your Text File</h2>
+    <form action="/compress" method="POST" enctype="multipart/form-data">
+        <label for="file">Upload Text File:</label>
+        <input type="file" name="file" id="file" accept=".txt" required><br><br>
+        <button type="submit">Compress</button>
+    </form>
+    
+    <!-- Form for decoding -->
+    <h2>Decode Compressed File</h2>
+<form action="/decode" method="POST" enctype="multipart/form-data">
+    <label for="file">Upload Compressed File:</label>
+    <input type="file" name="file" id="file" accept=".compressed" required><br><br>
+    <button type="submit">Decode</button>
+</form>
+
+</body>
+</html>
+
+
+

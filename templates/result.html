@@ -1,0 +1,41 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compression Results</title>
+</head>
+<body>
+    <h1>Compression Results</h1>
+    <p>Original File Size: {{ metrics.original_size }} bytes</p>
+    <p>Compressed File Size: {{ metrics.compressed_size }} bytes</p>
+    <p>Compression Ratio: {{ metrics.compression_ratio }}</p>
+    <p>Space Savings: {{ metrics.space_savings }}%</p>
+    <p>Encoding Time: {{ metrics.encoding_time }} seconds</p>
+    <h2>Download Compressed File:</h2>
+    <a href="/download/{{ download_link }}">Download</a>
+    <h2>Huffman Tree Visualization:</h2>
+    <img src="{{ metrics.tree_visualization }}" alt="Huffman Tree">
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compression Results</title>
+</head>
+<body>
+    <h1>Compression Results</h1>
+    <p>Original File Size: {{ metrics.original_size }} bytes</p>
+    <p>Compressed File Size: {{ metrics.compressed_size }} bytes</p>
+    <p>Compression Ratio: {{ metrics.compression_ratio }}</p>
+    <p>Space Savings: {{ metrics.space_savings }}%</p>
+    <p>Encoding Time: {{ metrics.encoding_time }} seconds</p>
+    <h2>Download Compressed File:</h2>
+    <a href="/download/{{ download_link }}">Download</a>
+    <h2>Huffman Tree Visualization:</h2>
+    <img src="{{ metrics.tree_visualization }}" alt="Huffman Tree">
+</body>
+</html>
