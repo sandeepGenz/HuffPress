@@ -255,6 +255,11 @@ def compress():
 
     return render_template('result.html', metrics=metrics, download_link=compressed_file_path)
 
+# # Download Route
+@app.route('/download/<path:filename>')
+def download(filename):
+    return send_file(filename, as_attachment=True)
+
 # Decode Route
 @app.route('/decode', methods=['POST'])
 def decode():
