@@ -221,25 +221,34 @@ def compress():
 
     start_time = time.time()
 
+    # Frequency table and Huffman tree
     freq_table = {char: text.count(char) for char in set(text)}
     root = build_huffman_tree(freq_table)
     codes = {}
     generate_codes(root, "", codes)
 
+    # Encode the text
     compressed_text = huffman_encode(text, codes)
     compressed_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename + '.compressed')
 
+    # Save the compressed file
     with open(compressed_file_path, 'wb') as f:
         f.write(compressed_text.encode())
 
+    # Save the frequency table to a file
+    freq_table_path = os.path.join(app.config['UPLOAD_FOLDER'], filename + '.freq')
+    with open(freq_table_path, 'w') as f:
+        f.write(str(freq_table))
+
     end_time = time.time()
 
+    # Metrics
     original_size = os.path.getsize(file_path)
     compressed_size = os.path.getsize(compressed_file_path)
     compression_ratio = compressed_size / original_size
     space_savings = 100 - (compression_ratio * 100)
 
-    # Generate and save Huffman tree visualization
+    # Visualize Huffman tree
     huffman_tree = visualize_huffman_tree(root)
     tree_path = os.path.join(app.config['UPLOAD_FOLDER'], filename + '_tree')
     huffman_tree.render(tree_path, format='png', cleanup=True)
@@ -263,27 +272,35 @@ def download(filename):
 # Decode Route
 @app.route('/decode', methods=['POST'])
 def decode():
-    file = request.files['file']
-    if not file:
-        return "No file uploaded", 400
-    
-    filename = file.filename
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    file.save(file_path)
+    compressed_file = request.files['file']
+    freq_file = request.files['freq']
 
-    with open(file_path, 'rb') as f:
+    if not compressed_file or not freq_file:
+        return "Both compressed file and frequency table file are required", 400
+
+    # Save files
+    compressed_file_path = os.path.join(app.config['UPLOAD_FOLDER'], compressed_file.filename)
+    compressed_file.save(compressed_file_path)
+
+    freq_file_path = os.path.join(app.config['UPLOAD_FOLDER'], freq_file.filename)
+    freq_file.save(freq_file_path)
+
+    # Load compressed text
+    with open(compressed_file_path, 'rb') as f:
         compressed_text = f.read().decode()
 
-    # Assume we have the same Huffman tree or codes from compression
-    # Normally, you would have to either send the tree or regenerate the tree from a frequency table.
-    # Here, we will just reconstruct the tree from the compressed file, which is impractical for a real scenario
-    # For demonstration purposes, we'll use an example, assuming the tree is already available.
-    freq_table = {char: compressed_text.count(char) for char in set(compressed_text)}
+    # Load frequency table
+    with open(freq_file_path, 'r') as f:
+        freq_table = eval(f.read())
+
+    # Rebuild Huffman tree
     root = build_huffman_tree(freq_table)
 
+    # Decode text
     decoded_text = huffman_decode(compressed_text, root)
 
     return render_template('decoded_result.html', decoded_text=decoded_text)
+
 
 # Home Route
 @app.route('/')
