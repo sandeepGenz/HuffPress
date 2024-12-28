@@ -136,9 +136,16 @@ import heapq
 from io import BytesIO
 from graphviz import Digraph
 
+
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max file size 16MB
+
+UPLOAD_FOLDER = "uploads"
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Node class for Huffman Tree
 class Node:
