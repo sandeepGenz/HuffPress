@@ -206,6 +206,8 @@ def visualize_huffman_tree(root):
     return dot
 
 # Compress Route
+import zipfile
+
 @app.route('/compress', methods=['POST'])
 def compress():
     file = request.files['file']
@@ -213,6 +215,7 @@ def compress():
         return "No file uploaded", 400
 
     filename = file.filename
+    base_name = os.path.splitext(filename)[0]  # Get the filename without extension
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(file_path)
 
@@ -229,16 +232,22 @@ def compress():
 
     # Encode the text
     compressed_text = huffman_encode(text, codes)
-    compressed_file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename + '.compressed')
+    compressed_file_path = os.path.join(app.config['UPLOAD_FOLDER'], base_name + '.compressed')
 
     # Save the compressed file
     with open(compressed_file_path, 'wb') as f:
         f.write(compressed_text.encode())
 
     # Save the frequency table to a file
-    freq_table_path = os.path.join(app.config['UPLOAD_FOLDER'], filename + '.freq')
+    freq_table_path = os.path.join(app.config['UPLOAD_FOLDER'], base_name + '.freq')
     with open(freq_table_path, 'w') as f:
         f.write(str(freq_table))
+
+    # Create a zip file containing both files
+    zip_file_path = os.path.join(app.config['UPLOAD_FOLDER'], base_name + '_compressed.zip')
+    with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+        zipf.write(compressed_file_path, os.path.basename(compressed_file_path))
+        zipf.write(freq_table_path, os.path.basename(freq_table_path))
 
     end_time = time.time()
 
@@ -262,7 +271,7 @@ def compress():
         "tree_visualization": tree_path + ".png"
     }
 
-    return render_template('result.html', metrics=metrics, download_link=compressed_file_path)
+    return render_template('result.html', metrics=metrics, download_link=zip_file_path)
 
 # # Download Route
 @app.route('/download/<path:filename>')
