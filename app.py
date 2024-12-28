@@ -133,10 +133,7 @@ from flask import Flask, render_template, request, send_file
 import os
 import time
 import heapq
-from io import BytesIO
-from graphviz import Digraph
-
-
+import zipfile
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -197,24 +194,7 @@ def huffman_decode(encoded_text, root):
             current_node = root  # Reset to the root after decoding a character
     return decoded_text
 
-# Visualize Huffman Tree
-def visualize_huffman_tree(root):
-    dot = Digraph(comment='Huffman Tree')
-
-    def add_nodes_edges(node, parent=None):
-        if node is not None:
-            dot.node(str(id(node)), label=str(node.char) if node.char else str(node.freq))
-            if parent:
-                dot.edge(str(id(parent)), str(id(node)))
-            add_nodes_edges(node.left, node)
-            add_nodes_edges(node.right, node)
-
-    add_nodes_edges(root)
-    return dot
-
 # Compress Route
-import zipfile
-
 @app.route('/compress', methods=['POST'])
 def compress():
     file = request.files['file']
@@ -264,18 +244,12 @@ def compress():
     compression_ratio = compressed_size / original_size
     space_savings = 100 - (compression_ratio * 100)
 
-    # Visualize Huffman tree
-    huffman_tree = visualize_huffman_tree(root)
-    tree_path = os.path.join(app.config['UPLOAD_FOLDER'], filename + '_tree')
-    huffman_tree.render(tree_path, format='png', cleanup=True)
-
     metrics = {
         "original_size": original_size,
         "compressed_size": compressed_size,
         "compression_ratio": compression_ratio,
         "space_savings": space_savings,
-        "encoding_time": end_time - start_time,
-        "tree_visualization": tree_path + ".png"
+        "encoding_time": end_time - start_time
     }
 
     return render_template('result.html', metrics=metrics, download_link=zip_file_path)
@@ -324,7 +298,7 @@ def home():
     return render_template('index.html')
 
 if __name__ == "__main__":
-    
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
